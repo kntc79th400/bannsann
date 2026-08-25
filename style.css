@@ -1,0 +1,727 @@
+/* ==========================================================================
+   1. 変数定義（カラーシステム）
+   ========================================================================== */
+:root {
+  --bg-dark-main: #0f172a;     /* 深紺（メイン暗色） */
+  --bg-dark-card: #1e293b;     /* 濃紺（カード・枠用） */
+  --bg-orange-light: #fff7ed; /* ソフトオレンジ（メイン明色） */
+  --bg-orange-card: #ffedd5;  /* 薄いオレンジ（カード・枠用） */
+  --text-light: #f8fafc;       /* 白系文字 */
+  --text-dark: #1e293b;        /* 紺系文字 */
+  --text-sub: #94a3b8;        /* グレー系補足文字 */
+  --accent: #f97316;          /* メインアクセント（オレンジ） */
+  --accent-hover: #ea580c;    /* ホバー時アクセント */
+}
+
+/* ==========================================================================
+   2. 基本設定
+   ========================================================================== */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Noto Sans JP", Arial, sans-serif;
+  color: var(--text-dark);
+  background-color: var(--bg-dark-main);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+section {
+  padding: 80px 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 30px;
+  letter-spacing: 2px;
+  font-family: "Noto Serif JP", serif;
+  font-weight: 900;
+  color: var(--bg-dark-main);
+}
+
+.video-container, 
+.message-box, 
+.cast-container, 
+.staff-list, 
+#story p {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   3. ロード画面
+   ========================================================================== */
+#loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #062333 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 1.0s ease;
+}
+
+.loading-logo {
+  width: 200px;
+  height: auto;
+  animation: pulse 1.5s infinite alternate;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1.05); }
+}
+
+.loaded {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   4. 固定ヘッダー
+   ========================================================================== */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(4px);
+  color: var(--text-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+  z-index: 100;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease-in-out;
+}
+
+header.header-hidden {
+  transform: translateY(-100%);
+}
+
+header .logo {
+  font-weight: bold;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+}
+
+.logo a {
+  color: inherit;
+  text-decoration: none;
+}
+
+header nav ul {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+header nav ul li {
+  margin-left: 20px;
+}
+
+header nav ul li a {
+  font-family: "Noto Sans JP", Arial, sans-serif;
+  color: var(--text-light);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+header nav ul li a:hover,
+header nav ul li a:active,
+header nav ul li a:focus {
+  color: var(--accent);
+}
+
+/* ==========================================================================
+   5. メインビジュアル（HERO）
+   ========================================================================== */
+#hero {
+  width: 100%;
+  aspect-ratio: 1285 / 2000;
+  position: relative;
+  overflow: hidden;
+  background: url('poster.jpg') center / cover no-repeat;
+  background-color: var(--bg-dark-main); 
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  color: var(--text-light);
+  padding: 60px 8% 60px 20px;
+  box-sizing: border-box;
+}
+
+#hero::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 25%;
+  background: linear-gradient(to bottom, transparent 0%, var(--bg-dark-main) 100%);
+  pointer-events: none;
+}
+
+.hero-content {
+  position: absolute;
+  top: 9%;
+  right: 6%;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  z-index: 2;
+}
+
+.hero-title {
+  font-size: clamp(24px, 4.5vw, 100px);
+  font-weight: 900;
+  font-family: "Noto Serif JP", serif;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  margin-left: 30px;
+  margin-bottom: 0;
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+  animation: fadeInUp 2.0s linear forwards;
+  animation-play-state: paused; 
+  opacity: 0;
+}
+
+.hero-title .tight-both {
+  display: inline-block;
+  margin-top: -0.04em;
+  margin-bottom: -0.11em;
+}
+
+body.is-loaded .hero-title {
+  animation-play-state: running;
+}
+
+.hero-title .second-line {
+  display: inline-block;
+  margin-top: 2.15em;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  100% {
+    opacity: 0.8;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   6. 各セクションの個別スタイル
+   ========================================================================== */
+
+/* TRAILER */
+#trailer {
+  background-color: var(--bg-dark-main);
+  color: var(--text-light);
+  padding-top: 60px;
+}
+
+#trailer h2 {
+  color: var(--text-light);
+}
+
+#trailer .video-container {
+  background: var(--bg-dark-card);
+  color: var(--text-light);
+  padding: 40px;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* DIRECTOR'S MESSAGE */
+#director {
+  background-color: var(--bg-orange-light);
+  color: var(--text-dark);
+}
+
+#director h2 {
+  color: var(--bg-dark-main);
+}
+
+#director .message-box {
+  background: var(--bg-orange-card);
+  color: var(--text-dark);
+  padding: 40px 30px; /* 横の余白を少し調整 */
+  border-radius: 12px;
+  text-align: left; /* スクロールして長文を読むため左揃えに変更（必要に応じて center でも可） */
+  border: 1px solid rgba(249, 115, 22, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+
+  /* ▼ 枠内スクロール用の設定 ▼ */
+  max-height: 350px; /* メッセージ枠の最大の高さを指定 */
+  overflow-y: auto;  /* 高さを超えた場合に縦スクロールバーを表示 */
+  box-sizing: border-box;
+}
+
+#director .director-name {
+  color: var(--text-dark);
+  font-weight: bold;
+  text-align: right; /* 監督名を右寄せにしてアクセントに */
+  margin-top: 20px;
+}
+
+/* ▼ メッセージ枠内のスクロールバー見た目調整（オプション） ▼ */
+#director .message-box::-webkit-scrollbar {
+  width: 6px; /* スクロールバーの太さ */
+}
+
+#director .message-box::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05); /* バーの背景色 */
+  border-radius: 5px;
+}
+
+#director .message-box::-webkit-scrollbar-thumb {
+  background: var(--accent); /* バーの色（オレンジ） */
+  border-radius: 10px;
+}
+
+/* STORY */
+#story {
+  background-color: var(--bg-dark-main);
+  color: var(--text-light);
+  text-align: center;
+}
+
+#story h2 {
+  color: var(--text-light);
+}
+
+#story p {
+  color: var(--text-light);
+  max-width: 700px;
+  line-height: 2.0;
+  letter-spacing: 1px;
+  font-family: "Noto Sans JP", Arial, sans-serif;
+  font-size: 0.95rem;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   BANNER PARALLAX（基本構造：画面いっぱいのパララックスセクション）
+   ========================================================================== */
+#banner-parallax {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh; /* スマホのアドレスバー表示時にも対応する1画面高さ */
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(0 0 0 0);
+  background-color: var(--bg-dark-main);
+}
+
+#banner-parallax::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100lvh;
+  
+  /* 画像の設定 */
+  background-image: url('visual1.jpg');
+  background-repeat: no-repeat;
+  
+  /* 画像の表示設定（画面全体を覆う標準設定） */
+  background-position: center center;
+  background-size: cover;
+  
+  will-change: transform;
+  z-index: -1;
+}
+
+/* スマホ表示時（必要に応じて後から個別調整可能） */
+@media (max-width: 768px) {
+  #banner-parallax::before {
+    background-position: center center;
+    background-size: cover;
+  }
+}
+
+/* CAST */
+#cast {
+  background-color: var(--bg-orange-light);
+  color: var(--text-dark);
+}
+
+#cast h2 {
+  color: var(--bg-dark-main);
+}
+
+/* ==========================================================================
+   7. 無限ループスライダー（GALLERY）
+   ========================================================================== */
+#gallery {
+  max-width: 100%;
+  width: 100%;
+  padding: 0;
+  background: linear-gradient(to bottom, var(--bg-orange-light) 50%, var(--bg-dark-main) 50%);
+}
+
+.slider {
+  width: 100%;
+  overflow: hidden;
+  background: transparent;
+  padding: 20px 0;
+  border-radius: 0;
+  border: none;
+}
+
+.slide-track {
+  display: flex;
+  /* スライド個数に応じて幅が自動でフィットする設定 */
+  width: max-content;
+  will-change: transform;
+  animation: loop-slide 20s linear infinite;
+}
+
+.slide {
+  width: 250px;
+  padding: 0;
+  overflow: hidden; /* ★これがはみ出しを防ぐ重要設定です */
+}
+
+.slide img {
+  display: block;
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 0px;
+  backface-visibility: hidden;
+}
+
+.slide img.crop-custom1{
+  object-position: 10% 30%;
+}
+
+.slide img.crop-custom2{
+  object-position: 0% 100%;
+}
+
+/* ▼ 特定の画像の切り抜き範囲を狭める（ズーム表示する）クラス ▼ */
+.slide img.zoom-in {
+  transform: scale(1.5); /* 1.3倍に拡大して切り抜き範囲を狭める */
+}
+
+@keyframes loop-slide {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+/* ==========================================================================
+   8. キャストカード＆スタッフレイアウト
+   ========================================================================== */
+.cast-container {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 30px;
+  flex-wrap: wrap;
+  max-width: 590px;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+/* ★2列並んだ時の「最後の1枚（11番目）」を綺麗に左寄せにするダミーの隙間埋め */
+.cast-container::after {
+  content: "";
+  width: 280px; /* カードと同じ幅を指定 */
+}
+
+.cast-box {
+  flex: 0 0 280px;
+  width: 280px;
+  background: var(--bg-orange-card);
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  padding: 25px 20px;
+  box-sizing: border-box;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cast-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.cast-images {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.cast-images img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.cast-info h3 {
+  margin: 10px 0 12px 0;
+  font-size: 1.2rem;
+  color: var(--text-dark);
+  white-space: nowrap;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.cast-info h3::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background-color: var(--accent);
+}
+
+.cast-info p {
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.cast-list {
+  list-style: none;
+  padding: 0;
+  text-align: center;
+}
+
+.cast-list li {
+  background: var(--bg-dark-card);
+  color: var(--text-light);
+  margin: 10px auto;
+  padding: 15px;
+  max-width: 400px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================================================================
+   STAFF & INFORMATION セクション（スマホズレ防止・固定高さ設定）
+   ========================================================================== */
+#staff {
+  background-color: #052232;
+  width: 100%;
+  
+  /* ▼ 画面高さ指定（100vh / 100dvh）を解除し、固定の上下左右余白にします ▼ */
+  padding: 80px 20px 40px 20px; /* 上: 80px, 左右: 20px, 下: 40px */
+  margin: 0;
+  
+  display: block; /* 画面全体の伸縮による影響を防ぐためシンプルなブロック配置に変更 */
+  box-sizing: border-box;
+}
+
+/* 画像を表示するコンテナの設定 */
+.staff-image-container {
+  max-width: 500px; /* PCなど大きな画面で広がりすぎないための制限幅 */
+  width: 100%;
+  margin: 0 auto;   /* 左右中央寄せ */
+}
+
+/* 画像自体のサイズ・見た目の調整 */
+.staff-info-img {
+  width: 100%;
+  height: auto;     /* 縦横比を保ったまま綺麗に拡大縮小 */
+  display: block;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* ==========================================================================
+   9. フッター & SNSアイコン
+   ========================================================================== */
+footer {
+  background-color: #090d16;
+  color: var(--text-light);
+  text-align: center;
+  padding: 40px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sns-links .sns-icon img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  vertical-align: middle;
+}
+
+.sns-links .sns-icon img:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
+}
+
+/* ==========================================================================
+   10. アニメーション演出
+   ========================================================================== */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1.2s ease, transform 0.8s ease;
+}
+
+.fade-in.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   11. レスポンシブ対応（スマホ表示調整）
+   ========================================================================== */
+@media (max-width: 768px) {
+  header {
+    height: 60px;
+    padding: 10px 20px;
+    background-color: transparent;
+    backdrop-filter: none;
+    border-bottom: none;
+    justify-content: flex-end;
+  }
+
+  header.header-hidden {
+    transform: none !important;
+  }
+
+  header .logo {
+    display: none;
+  }
+
+  #hamburger-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 44px;
+    height: 44px;
+    padding: 12px 10px;
+    box-sizing: border-box;
+    background-color: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0px;
+    cursor: pointer;
+    z-index: 101;
+  }
+
+  #hamburger-btn span {
+    width: 100%;
+    height: 2px;
+    background-color: var(--text-light);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+
+  #hamburger-btn.active span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  #hamburger-btn.active span:nth-child(2) {
+    opacity: 0;
+  }
+  #hamburger-btn.active span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  #nav-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--bg-dark-main);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 100;
+  }
+
+  #nav-menu.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  #nav-menu ul {
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+  }
+
+  #nav-menu ul li {
+    margin-left: 0;
+  }
+
+  #nav-menu ul li a {
+    font-size: 1.1rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+  }
+
+  #nav-menu ul li a:active,
+  #nav-menu ul li a:focus {
+    color: var(--accent);
+  }
+
+  #hero {
+    width: 100% !important;
+    aspect-ratio: 1285 / 2000 !important;
+    height: auto !important;
+    margin-top: 0 !important;
+    padding: 0 !important;
+    background-size: 100% auto !important;
+    background-position: center top !important;
+  }
+
+  .hero-content {
+    top: 10%;
+    right: 5%;
+  }
+
+  .hero-title {
+    font-size: clamp(20px, 5vw, 36px);
+  }
+}
+
+@media (min-width: 769px) {
+  #hamburger-btn {
+    display: none;
+  }
+}

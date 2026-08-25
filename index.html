@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>映画公式サイト</title>
+    
+    <!-- フォントおよびCSSの読み込み -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Serif+JP:wght@600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 1. ローディング画面 -->
+    <div id="loading">
+        <img src="logo.jpg" alt="映画タイトルロゴ" class="loading-logo">
+    </div>
+
+    <!-- 2. 固定ヘッダーナビゲーション -->
+    <header>
+        <div class="logo"><a href="#">MOVIE TITLE</a></div>
+        
+        <!-- スマホ用ハンバーガーボタン（aria属性追加でアクセシビリティ向上） -->
+        <button id="hamburger-btn" aria-label="メニューを開く" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <!-- ナビゲーションメニュー -->
+        <nav id="nav-menu">
+            <ul>
+                <li><a href="#">TOP</a></li>
+                <li><a href="#trailer">TRAILER</a></li>
+                <li><a href="#director">DIRECTOR'S MESSAGE</a></li>
+                <li><a href="#story">STORY</a></li>
+                <li><a href="#cast">CAST</a></li>
+                <li><a href="#staff">STAFF</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- 3. メインコンテンツ -->
+    <main>
+        <!-- ヒーローセクション -->
+        <section id="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    それでもね、<br>
+                    <span class="second-line">会<span class="tight-both">っ</span>てみたいの――</span>
+                </h1> 
+            </div>
+        </section>
+
+        <!-- トレーラーセクション -->
+        <section id="trailer">
+            <h2 class="fade-in">TRAILER</h2>
+            <div class="video-container">
+                <p>（ここにトレーラー動画が入ります）</p>
+            </div>
+        </section>
+
+        <!-- 監督メッセージセクション -->
+        <section id="director">
+            <h2 class="fade-in">DIRECTOR'S MESSAGE</h2>
+            <div class="message-box">
+                <p>「400」という取り留めのないクラスを、一つの言葉で表すのは困難を極めます。
+一見すると、おだやかでちょっぴりシャイクラス。けれど、一人ひとりが豊かな個性を持ち、それが自然と調和しながら眩しく輝く、優しくも強い絆がありました。
+
+振り返れば、私たちの歩みは手探りで、試行錯誤を繰り返す道のりでした。
+
+初めて挑んだ1年目の『mission 忍 possible』。
+華やかな文化祭の裏側にある圧倒的な作業量に驚き、細かなズレや組み立てに頭を悩ませる毎日でした。未経験のことばかりで手探りの中食らいつきましたが、校内発表に間に合わなかった苦い経験も含めて、すべてが刺激的でかけがえのない学びでした。
+
+「次こそは！」と意気込んで臨んだ2年目の『銃銃カルビ』。
+計画的に進めようと奮闘したものの、こだわり抜きたい制作物の難航や、部活動との両立による人手不足など、思うようにいかない現実にもぶつかりました。舞台裏で全員でカバーし合いながら駆け抜け、多くのお客様に届いた手応えを感じつつも、目標だった「橘賞」にはあと一歩届きませんでした。
+
+思い通りにいかないことも多く、悔しさもたくさん味わいました。けれど、汗を流し、仲間と頭を悩ませたあの時間は、間違いなく最高に楽しかった。文化祭直後のみんなで書いた反省文に胸が熱くなりました。そこにあったのは、誰一人諦めていない、「この仲間で最高のものをつくりたい」という真っ直ぐな熱量でした。
+
+入学式から始まり、いくつもの行事と何気ない日常を重ね、笑い合い、時にぶつかり、悔しさを力に変えながら、私たちは少しずつ「400」という一つの家族になってきました。
+私たちはいつだって不完全で、遠回りばかりしてきました。けれど、だからこそ、互いを補い合い、支え合える強さを手に入れました。
+
+今、悔しさを希望に変え、全員が同じ方向を向いて最後の舞台へと向かっています。
+
+3年間という膨大な時間を分かち合ってきた私たちが、すべての技術と熱量を注ぎ込み、限界までこだわり抜いた集大成。
+
+笑いと感動に包まれるこの物語は、私たちの3年間の足跡そのものです。
+
+大好きなみんなと創り上げる、最初で最後の最高の晴れ舞台。不完全ながらも懸命に走り続ける私たちの姿を、どうか見届けてください。
+
+皆様のご来場を、心よりお待ちしております。</p>
+                <p class="director-name">監督より</p>
+            </div>
+        </section>
+
+        <!-- ギャラリースライダーセクション（画像セットは1組のみ配置） -->
+        <section id="gallery">
+            <div class="slider">
+                <div class="slide-track" id="slide-track">
+                    <div class="slide"><img src="photo1.jpg" alt="映画シーン1"></div>
+                    <div class="slide"><img src="photo2.jpg" alt="映画シーン2" class="crop-custom1"></div>
+                    <div class="slide"><img src="photo3.jpg" alt="映画シーン3"></div>
+                    <div class="slide"><img src="photo4.jpg" alt="映画シーン4"></div>
+                    <div class="slide"><img src="photo5.jpg" alt="映画シーン5" class="zoom-in" class="crop-custom2"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ストーリーセクション -->
+        <section id="story">
+            <h2 class="fade-in">STORY</h2>
+            <p>「最期の晩餐は舞子の味噌汁がいいなあ」<br>――父は最期まで、僕を産んですぐに亡くなった母のことを愛していた。
+未来の人気作家・高槻耕太郎が両親に会うべくタイムスリップした先は、2013年の吉祥寺！
+かつての両親が住むシェアハウス「イノヘッド」では、個性的な住人たちによる奇想天外な日常が待ち受けていた。
+しかし彼ら家族には、とある隠された真実があって――<br>長い年月を超えた愛が家族を繋ぐ、ハートフルちょっとコメディ</p>
+        </section>
+
+        <!-- パララックス固定画像セクション -->
+        <section id="banner-parallax"></section>
+
+        <!-- キャストセクション（alt属性を適切な人物名に変更） -->
+        <section id="cast">
+            <h2 class="fade-in">CAST</h2>
+            <div class="cast-container">
+                
+                <div class="cast-box">
+                    <div class="cast-images">
+                        <img src="cast1.jpg" alt="高槻 純二">
+                    </div>
+                    <div class="cast-info">
+                        <h3>高槻 純二</h3>
+                        <p>耕太郎の父。未来では問題を起こしてばかりの頑固親父だったが、タイムスリップした先では作家志望の好青年だった。何かにつけてぐちぐちとぼやきがちだが情に厚い性格</p>
+                    </div>
+                </div>
+
+                <div class="cast-box">
+                    <div class="cast-images">
+                        <img src="cast2.jpg" alt="山科 舞子">
+                    </div>
+                    <div class="cast-info">
+                        <h3>山科 舞子</h3>
+                        <p>耕太郎の母。未来では耕太郎を産んですぐ交通事故で亡くなったらしい。タイムスリップした先では純二の彼女として毎日愉快にふざけ倒している</p>
+                    </div>
+                </div>
+
+                <div class="cast-box">
+                    <div class="cast-images">
+                        <img src="cast3.jpg" alt="高槻 耕太郎">
+                    </div>
+                    <div class="cast-info">
+                        <h3>高槻 耕太郎</h3>
+                        <p>両親に会うために未来からやってきた売れっ子作家。氷見子とは長年の夫婦として固い絆で結ばれている。意外と頑固で自分を曲げないところがある</p>
+                    </div>
+                </div>
+
+                <div class="cast-box">
+                    <div class="cast-images">
+                        <img src="cast4.jpg" alt="高槻 氷見子">
+                    </div>
+                    <div class="cast-info">
+                        <h3>高槻 氷見子</h3>
+                        <p>耕太郎の妻。夫を追いかけて一緒にタイムスリップしてきた。いつもパワフルでぶっ飛んだ言動も多いが耕太郎への愛は本物</p>
+                    </div>
+                </div>
+
+                <div class="cast-box">
+                    <div class="cast-images">
+                        <img src="cast5.jpg" alt="中野 たま">
+                    </div>
+                    <div class="cast-info">
+                        <h3>中野 たま</h3>
+                        <p>耕太郎の思いに応えてタイムマシンを発明した天才発明少女。他人に興味のない能天気な科学バカだったが、純二や舞子との交流を通じてイノヘッドの住人たちに影響されていく</p>
+                    </div>
+                </div>
+
+                <div class="cast-box">
+                    <div class="cast-images">
+                        <img src="cast6.jpg" alt="江田島 安芸">
+                    </div>
+                    <div class="cast-info">
+                        <h3>江田島 安芸</h3>
+                        <p>イノヘッドに住むキャバ嬢で、みんなからは安芸ちゃんと呼ばれている。弥彦とは幼馴染。明るい性格だがなにか秘密を抱えているようで……</p>
+                    </div>
+                </div>
+
+                <div class="cast-box">
+                    <div class="cast-images">
+                        <img src="cast7.jpg" alt="三条 弥彦">
+                    </div>
+                    <div class="cast-info">
+                        <h3>三条 弥彦</h3>
+                        <p>安芸ちゃんの彼氏で、吉祥寺でホストとして働いている。長い付き合いなこともあり、安芸ちゃんのことはどこか危うさすら感じさせるほど大切に思っている</p>
+                    </div>
+                </div>
+
+                <div class="cast-box">
+                    <div class="cast-images">
+                        <img src="cast8.jpg" alt="ナタリー">
+                    </div>
+                    <div class="cast-info">
+                        <h3>ナタリー</h3>
+                        <p>イノヘッドに住む在日スペイン人。なぜか英語とカタコトの関西弁を喋り、常にハイテンション。声量マックスで叫びながら日々を全力で生きている。</p>
+                    </div>
+                </div>
+
+                <div class="cast-box">
+                    <div class="cast-images">
+                        <img src="cast9.jpg" alt="大牟田">
+                    </div>
+                    <div class="cast-info">
+                        <h3>大牟田</h3>
+                        <p>ナタリーの連れてきた男の子。生粋のSFマニアらしいがちょっぴり挙動不審。ひょんなことからイノヘッドの珍事に巻き込まれる</p>
+                    </div>
+                </div>
+
+                <div class="cast-box">
+                    <div class="cast-images">
+                        <img src="cast10.jpg" alt="常滑">
+                    </div>
+                    <div class="cast-info">
+                        <h3>常滑</h3>
+                        <p>純二たちの住むシェアハウスイノヘッドのオーナーで、住人からはトコさんと呼ばれている。美容には一家言ある筋金入りのオネエ</p>
+                    </div>
+                </div>
+
+                <div class="cast-box">
+                    <div class="cast-images">
+                        <img src="cast11.jpg" alt="刑事">
+                    </div>
+                    <div class="cast-info">
+                        <h3>刑事</h3>
+                        <p>吉祥寺で起きたとある事件の真相を追って、イノヘッドの近所で捜査を進めている</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- スタッフ・公開情報画像セクション -->
+        <section id="staff">
+            <div class="staff-image-container">
+                <!-- ★ここに作成した画像を指定します（ファイル名をご自身の画像名に変更してください） -->
+                <img src="info.jpg" alt="スタッフおよび公演情報" class="staff-info-img">
+            </div>
+        </section>
+    </main>
+
+    <!-- 4. フッター -->
+    <footer>
+        <div class="sns-links">
+            <a href="https://www.instagram.com/79th3400.kunikosai?igsi=MTF2MTZteHR3ajRzZg==" target="_blank" class="sns-icon" aria-label="Instagramページを開く">
+                <img src="instagram.png" alt="Instagramアイコン">
+            </a>
+        </div>
+    </footer>
+
+    <!-- JSファイルの読み込み -->
+    <script src="script.js"></script>
+</body>
+</html>
