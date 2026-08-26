@@ -232,30 +232,7 @@ body.is-loaded .hero-title {
 }
 
 /* ==========================================================================
-   6. 各セクションの個別スタイル
-   ========================================================================== */
-
-/* 動画が画面幅に合わせて拡大・縮小するようにする設定 */
-.video-container {
-  position: relative;
-  width: 100%;
-  max-width: 800px; /* 動画の最大幅（お好みで調整してください） */
-  margin: 0 auto;   /* センタリング */
-  padding-bottom: 56.25%; /* 16:9のアスペクト比を維持するための高さ指定 */
-  height: 0;
-  overflow: hidden;
-}
-
-.video-container iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-/* ==========================================================================
-   TRAILER セクション（動画のはみ出し防止・完全レスポンシブ対応）
+   TRAILER セクション（16:9の箱に固定）
    ========================================================================== */
 #trailer {
   background-color: var(--bg-dark-main);
@@ -263,7 +240,7 @@ body.is-loaded .hero-title {
   padding: 80px 20px;
   box-sizing: border-box;
   width: 100%;
-  overflow: hidden; /* 万が一のはみ出しをここでブロック */
+  overflow: hidden;
 }
 
 #trailer h2 {
@@ -271,15 +248,15 @@ body.is-loaded .hero-title {
   text-align: center;
 }
 
-/* 動画を囲むコンテナ（パソコンでも大きくなりすぎないよう調整） */
+/* 動画を囲むコンテナ（16:9の縦横比に固定） */
 #trailer .video-container {
   position: relative;
   width: 100%;
-  max-width: 650px;       /* ★パソコンでの最大幅を650pxに制限してはみ出しを防ぐ */
+  max-width: 800px;       /* パソコンでの最大幅（お好みで調整可能です） */
   margin: 0 auto;         /* 左右中央寄せ */
-  padding-bottom: 56.25%; /* 16:9のアスペクト比を維持する高さ指定 */
+  padding-bottom: 56.25%; /* ★ここで正確な「16:9」の縦横比に固定します */
   height: 0;
-  overflow: hidden;       /* 枠からはみ出た部分を隠す */
+  overflow: hidden;       
   background: var(--bg-dark-card);
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
