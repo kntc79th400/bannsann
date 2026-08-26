@@ -745,3 +745,45 @@ footer {
     display: none;
   }
 }
+
+/* PC表示の時：横並びにする設定*/
+.trailer-slider-wrapper{
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.trailer-slider-wrapper .video-container{
+  flex: 1;
+  width: 100%;
+  margin: 0;
+}
+
+/*スマホ表示の時：スライダー形式にする設定*/
+@media (max-width: 768px) {
+  .trailer-slider-wrapper{
+    position: relative;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .trailer-slider-wrapper .video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease-in-out; /* ふんわり切り替わるアニメーション */
+  }
+
+  /* 画面に表示するスライドのクラス */
+  .trailer-slider-wrapper .video-container.active-slide {
+    position: relative; /* 最初の1枚目の高さを確保する */
+    opacity: 1;
+    visibility: visible;
+  }
+}

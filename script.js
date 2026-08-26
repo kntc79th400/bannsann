@@ -107,3 +107,25 @@ navLinks.forEach(link => {
     });
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  const slides = document.querySelectorAll(".trailer-slide");
+  if (slides.length <= 1) return; // 動画が1つ以下の場合は何もしない
+
+  let currentIndex = 0;
+  const intervalTime = 4000; // 切り替わる時間（4000ミリ秒 = 4秒）
+
+  function switchSlide() {
+    // スマホサイズ（768px以下）のときだけスライドを動かす
+    if (window.innerWidth <= 768) {
+      slides[currentIndex].classList.remove("active-slide");
+      currentIndex = (currentIndex + 1) % slides.length;
+      slides[currentIndex].classList.add("active-slide");
+    }
+  }
+
+  // 初期化：最初のスライドに active-slide を付与
+  slides[0].classList.add("active-slide");
+
+  // 定期的に切り替えるタイマーを開始
+  setInterval(switchSlide, intervalTime);
+});
