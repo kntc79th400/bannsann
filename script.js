@@ -105,7 +105,7 @@ navLinks.forEach(link => {
 });
 
 // ==========================================================================
-// 6. トレーラーセクションの自動スクロール＆手動解除機能
+// 6. トレーラーセクションの自動スクロール（標準スムーズスクロール版）
 // ==========================================================================
 document.addEventListener("DOMContentLoaded", () => {
   const slider = document.getElementById("trailer-slider");
@@ -116,9 +116,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let currentIndex = 0;
   let autoScrollTimer = null;
-  const AUTO_SCROLL_INTERVAL = 4000; // 自動スクロールの間隔（4000 = 4秒）
+  let resumeTimer = null;
+  let isVideoPlaying = false; // 動画再生状態の管理フラグ
 
-  // 指定インデックスへスクロールする関数
+  const AUTO_SCROLL_INTERVAL = 5000; // 自動で切り替わる間隔（5秒）
+  const RESUME_DELAY = 8000;         // 手動操作後、自動スクロールが再開するまでの時間（8秒）
+
+  // ブラウザ標準のスムーズスクロールで移動する関数
   const scrollToSlide = (index) => {
     const targetSlide = slides[index];
     if (targetSlide) {
@@ -135,19 +139,33 @@ document.addEventListener("DOMContentLoaded", () => {
     if (autoScrollTimer) clearInterval(autoScrollTimer);
 
     autoScrollTimer = setInterval(() => {
-      // 768px以下のスマホ表示時のみ実行
-      if (window.innerWidth <= 768) {
+      if (window.innerWidth <= 768 && !isVideoPlaying) {
         currentIndex = (currentIndex + 1) % slides.length;
         scrollToSlide(currentIndex);
       }
     }, AUTO_SCROLL_INTERVAL);
   };
 
-  // 自動スクロールを解除（停止）する関数
+  // タイマーを完全停止する関数
   const stopAutoScroll = () => {
     if (autoScrollTimer) {
       clearInterval(autoScrollTimer);
       autoScrollTimer = null;
+    }
+    if (resumeTimer) {
+      clearTimeout(resumeTimer);
+      resumeTimer = null;
+    }
+  };
+
+  // 一時停止して指定時間後に自動スクロールを再開する関数
+  const pauseAndResetTimer = () => {
+    stopAutoScroll();
+
+    if (!isVideoPlaying) {
+      resumeTimer = setTimeout(() => {
+        startAutoScroll();
+      }, RESUME_DELAY);
     }
   };
 
@@ -180,24 +198,29 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // ドットタップ時に自動スクロールを解除して切り替え
+  // ドットタップ時（一定時間後に再開）
   dots.forEach((dot) => {
     dot.addEventListener("click", () => {
-      stopAutoScroll();
+      isVideoPlaying = false;
       const index = parseInt(dot.getAttribute("data-index"));
       scrollToSlide(index);
+      pauseAndResetTimer();
     });
   });
 
-  // 画面スワイプ・タッチ操作時に自動スクロールを解除
+  // 画面操作・スワイプ時（一定時間後に再開）
   const userEvents = ["touchstart", "mousedown", "pointerdown", "wheel"];
   userEvents.forEach((eventType) => {
-    slider.addEventListener(eventType, stopAutoScroll, { passive: true });
+    slider.addEventListener(eventType, () => {
+      isVideoPlaying = false;
+      pauseAndResetTimer();
+    }, { passive: true });
   });
 
-  // YouTube動画（iframe）がタップされた（フォーカス移動した）際に自動スクロールを解除
+  // YouTube動画（iframe）タップ時は自動スクロールを停止
   window.addEventListener("blur", () => {
     if (document.activeElement && document.activeElement.tagName === "IFRAME") {
+      isVideoPlaying = true;
       stopAutoScroll();
     }
   });
