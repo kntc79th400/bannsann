@@ -14,11 +14,10 @@ window.addEventListener('load', function() {
 });
 
 // ==========================================================================
-// 2. ギャラリースライダーの要素自動複製処理（軽量化と保守性アップ）
+// 2. ギャラリースライダーの要素自動複製処理
 // ==========================================================================
 const slideTrack = document.getElementById('slide-track');
 if (slideTrack) {
-    // HTML内のスライド要素を取得して自動で複製・結合する
     const slides = slideTrack.innerHTML;
     slideTrack.innerHTML = slides + slides;
 }
@@ -77,7 +76,7 @@ window.addEventListener('scroll', () => {
 });
 
 // ==========================================================================
-// 5. スマホ用ハンバーガーメニューの開閉制御（アクセシビリティ対応）
+// 5. スマホ用ハンバーガーメニューの開閉制御
 // ==========================================================================
 const hamburgerBtn = document.getElementById('hamburger-btn');
 const navMenu = document.getElementById('nav-menu');
@@ -86,8 +85,6 @@ const navLinks = document.querySelectorAll('#nav-menu a');
 hamburgerBtn.addEventListener('click', () => {
     const isOpen = hamburgerBtn.classList.toggle('active');
     navMenu.classList.toggle('active');
-    
-    // 開閉状態を aria-expanded 属性へ反映
     hamburgerBtn.setAttribute('aria-expanded', isOpen);
 });
 
@@ -108,7 +105,7 @@ navLinks.forEach(link => {
 });
 
 // ==========================================================================
-// トレーラーセクションの横スワイプとドットの連動機能
+// 6. トレーラーセクションの自動スクロール＆手動解除機能
 // ==========================================================================
 document.addEventListener("DOMContentLoaded", () => {
   const slider = document.getElementById("trailer-slider");
@@ -117,9 +114,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!slider || dots.length === 0 || slides.length === 0) return;
 
-  // 1. スクロール（スワイプ）したときに、どの動画が真ん中にあるか判断してドットを光らせる
+  let currentIndex = 0;
+  let autoScrollTimer = null;
+  const AUTO_SCROLL_INTERVAL = 4000; // 自動スクロールの間隔（4000 = 4秒）
+
+  // 指定インデックスへスクロールする関数
+  const scrollToSlide = (index) => {
+    const targetSlide = slides[index];
+    if (targetSlide) {
+      targetSlide.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest"
+      });
+    }
+  };
+
+  // 自動スクロールを開始する関数
+  const startAutoScroll = () => {
+    if (autoScrollTimer) clearInterval(autoScrollTimer);
+
+    autoScrollTimer = setInterval(() => {
+      // 768px以下のスマホ表示時のみ実行
+      if (window.innerWidth <= 768) {
+        currentIndex = (currentIndex + 1) % slides.length;
+        scrollToSlide(currentIndex);
+      }
+    }, AUTO_SCROLL_INTERVAL);
+  };
+
+  // 自動スクロールを解除（停止）する関数
+  const stopAutoScroll = () => {
+    if (autoScrollTimer) {
+      clearInterval(autoScrollTimer);
+      autoScrollTimer = null;
+    }
+  };
+
+  // スクロール位置に合わせてドットの表示を更新
   slider.addEventListener("scroll", () => {
-    if (window.innerWidth > 768) return; // スマホサイズのみ実行
+    if (window.innerWidth > 768) return;
 
     const sliderRect = slider.getBoundingClientRect();
     let closestIndex = 0;
@@ -127,7 +161,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     slides.forEach((slide, index) => {
       const slideRect = slide.getBoundingClientRect();
-      // スライダーの中央からの距離を計算
       const distance = Math.abs((slideRect.left + slideRect.width / 2) - (sliderRect.left + sliderRect.width / 2));
       
       if (distance < minDistance) {
@@ -136,7 +169,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // ドットのactiveクラスを切り替える
+    currentIndex = closestIndex;
+
     dots.forEach((dot, index) => {
       if (index === closestIndex) {
         dot.classList.add("active");
@@ -146,19 +180,28 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 2. ドットをクリック（タップ）したときに、対応する動画の位置へスムーズにスクロールさせる
+  // ドットタップ時に自動スクロールを解除して切り替え
   dots.forEach((dot) => {
     dot.addEventListener("click", () => {
+      stopAutoScroll();
       const index = parseInt(dot.getAttribute("data-index"));
-      const targetSlide = slides[index];
-
-      if (targetSlide) {
-        targetSlide.scrollIntoView({
-          behavior: "smooth",
-          inline: "center",
-          block: "nearest"
-        });
-      }
+      scrollToSlide(index);
     });
   });
+
+  // 画面スワイプ・タッチ操作時に自動スクロールを解除
+  const userEvents = ["touchstart", "mousedown", "pointerdown", "wheel"];
+  userEvents.forEach((eventType) => {
+    slider.addEventListener(eventType, stopAutoScroll, { passive: true });
+  });
+
+  // YouTube動画（iframe）がタップされた（フォーカス移動した）際に自動スクロールを解除
+  window.addEventListener("blur", () => {
+    if (document.activeElement && document.activeElement.tagName === "IFRAME") {
+      stopAutoScroll();
+    }
+  });
+
+  // ページ読み込み時に自動スクロールを開始
+  startAutoScroll();
 });

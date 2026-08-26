@@ -27,7 +27,6 @@ body {
   background-color: var(--bg-dark-main);
   line-height: 1.6;
   overflow-x: hidden;
-  margin: 0;
   padding: 0;
 }
 
@@ -221,18 +220,12 @@ body.is-loaded .hero-title {
 }
 
 @keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(-15px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0% { opacity: 0; transform: translateY(-15px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 /* ==========================================================================
-   TRAILER セクション（16:9の箱に固定）
+   TRAILER セクション
    ========================================================================== */
 #trailer {
   background-color: var(--bg-dark-main);
@@ -248,23 +241,30 @@ body.is-loaded .hero-title {
   text-align: center;
 }
 
-/* 動画を囲むコンテナ（16:9の縦横比に固定） */
-#trailer .video-container {
+.trailer-slider-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.trailer-slider-wrapper .video-container {
   position: relative;
+  flex: 1;
   width: 100%;
-  max-width: 800px;       /* パソコンでの最大幅（お好みで調整可能です） */
-  margin: 0 auto;         /* 左右中央寄せ */
-  padding-bottom: 56.25%; /* ★ここで正確な「16:9」の縦横比に固定します */
+  max-width: 800px;
+  padding-bottom: 56.25%;
   height: 0;
-  overflow: hidden;       
+  overflow: hidden;
   background: var(--bg-dark-card);
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  margin: 0;
   box-sizing: border-box;
 }
 
-/* 実際のYouTubeプレイヤーのサイズ調整 */
-#trailer .video-container iframe {
+.trailer-slider-wrapper .video-container iframe {
   position: absolute;
   top: 0;
   left: 0;
@@ -274,7 +274,9 @@ body.is-loaded .hero-title {
   border: 0;
 }
 
-/* DIRECTOR'S MESSAGE */
+/* ==========================================================================
+   DIRECTOR'S MESSAGE
+   ========================================================================== */
 #director {
   background-color: var(--bg-orange-light);
   color: var(--text-dark);
@@ -287,41 +289,40 @@ body.is-loaded .hero-title {
 #director .message-box {
   background: var(--bg-orange-card);
   color: var(--text-dark);
-  padding: 40px 30px; /* 横の余白を少し調整 */
+  padding: 40px 30px;
   border-radius: 12px;
-  text-align: left; /* スクロールして長文を読むため左揃えに変更（必要に応じて center でも可） */
+  text-align: left;
   border: 1px solid rgba(249, 115, 22, 0.2);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-
-  /* ▼ 枠内スクロール用の設定 ▼ */
-  max-height: 350px; /* メッセージ枠の最大の高さを指定 */
-  overflow-y: auto;  /* 高さを超えた場合に縦スクロールバーを表示 */
+  max-height: 350px;
+  overflow-y: auto;
   box-sizing: border-box;
 }
 
 #director .director-name {
   color: var(--text-dark);
   font-weight: bold;
-  text-align: right; /* 監督名を右寄せにしてアクセントに */
+  text-align: right;
   margin-top: 20px;
 }
 
-/* ▼ メッセージ枠内のスクロールバー見た目調整（オプション） ▼ */
 #director .message-box::-webkit-scrollbar {
-  width: 6px; /* スクロールバーの太さ */
+  width: 6px;
 }
 
 #director .message-box::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05); /* バーの背景色 */
+  background: rgba(0, 0, 0, 0.05);
   border-radius: 5px;
 }
 
 #director .message-box::-webkit-scrollbar-thumb {
-  background: var(--accent); /* バーの色（オレンジ） */
+  background: var(--accent);
   border-radius: 10px;
 }
 
-/* STORY */
+/* ==========================================================================
+   STORY
+   ========================================================================== */
 #story {
   background-color: var(--bg-dark-main);
   color: var(--text-light);
@@ -343,13 +344,13 @@ body.is-loaded .hero-title {
 }
 
 /* ==========================================================================
-   BANNER PARALLAX（基本構造：画面いっぱいのパララックスセクション）
+   BANNER PARALLAX
    ========================================================================== */
 #banner-parallax {
   position: relative;
   width: 100vw;
   height: 100vh;
-  height: 100dvh; /* スマホのアドレスバー表示時にも対応する1画面高さ */
+  height: 100dvh;
   padding: 0;
   margin: 0;
   overflow: hidden;
@@ -365,39 +366,16 @@ body.is-loaded .hero-title {
   width: 100vw;
   height: 100vh;
   height: 100lvh;
-  
-  /* 画像の設定 */
   background-image: url('visual1.jpg');
   background-repeat: no-repeat;
-  
-  /* 画像の表示設定（画面全体を覆う標準設定） */
   background-position: center center;
   background-size: cover;
-  
   will-change: transform;
   z-index: -1;
 }
 
-/* スマホ表示時（必要に応じて後から個別調整可能） */
-@media (max-width: 768px) {
-  #banner-parallax::before {
-    background-position: center center;
-    background-size: cover;
-  }
-}
-
-/* CAST */
-#cast {
-  background-color: var(--bg-orange-light);
-  color: var(--text-dark);
-}
-
-#cast h2 {
-  color: var(--bg-dark-main);
-}
-
 /* ==========================================================================
-   7. 無限ループスライダー（GALLERY）
+   GALLERY (無限ループスライダー)
    ========================================================================== */
 #gallery {
   max-width: 100%;
@@ -417,7 +395,6 @@ body.is-loaded .hero-title {
 
 .slide-track {
   display: flex;
-  /* スライド個数に応じて幅が自動でフィットする設定 */
   width: max-content;
   will-change: transform;
   animation: loop-slide 20s linear infinite;
@@ -426,7 +403,7 @@ body.is-loaded .hero-title {
 .slide {
   width: 250px;
   padding: 0;
-  overflow: hidden; /* ★これがはみ出しを防ぐ重要設定です */
+  overflow: hidden;
 }
 
 .slide img {
@@ -438,17 +415,16 @@ body.is-loaded .hero-title {
   backface-visibility: hidden;
 }
 
-.slide img.crop-custom1{
+.slide img.crop-custom1 {
   object-position: 10% 30%;
 }
 
-.slide img.crop-custom2{
+.slide img.crop-custom2 {
   object-position: 0% 100%;
 }
 
-/* ▼ 特定の画像の切り抜き範囲を狭める（ズーム表示する）クラス ▼ */
 .slide img.zoom-in {
-  transform: scale(1.5); /* 1.3倍に拡大して切り抜き範囲を狭める */
+  transform: scale(1.5);
 }
 
 @keyframes loop-slide {
@@ -457,8 +433,17 @@ body.is-loaded .hero-title {
 }
 
 /* ==========================================================================
-   8. キャストカード＆スタッフレイアウト
+   CAST & STAFF
    ========================================================================== */
+#cast {
+  background-color: var(--bg-orange-light);
+  color: var(--text-dark);
+}
+
+#cast h2 {
+  color: var(--bg-dark-main);
+}
+
 .cast-container {
   display: flex;
   justify-content: center;
@@ -470,10 +455,9 @@ body.is-loaded .hero-title {
   padding: 20px 0;
 }
 
-/* ★2列並んだ時の「最後の1枚（11番目）」を綺麗に左寄せにするダミーの隙間埋め */
 .cast-container::after {
   content: "";
-  width: 280px; /* カードと同じ幅を指定 */
+  width: 280px;
 }
 
 .cast-box {
@@ -535,56 +519,31 @@ body.is-loaded .hero-title {
   line-height: 1.5;
 }
 
-.cast-list {
-  list-style: none;
-  padding: 0;
-  text-align: center;
-}
-
-.cast-list li {
-  background: var(--bg-dark-card);
-  color: var(--text-light);
-  margin: 10px auto;
-  padding: 15px;
-  max-width: 400px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-/* ==========================================================================
-   STAFF & INFORMATION セクション（スマホズレ防止・固定高さ設定）
-   ========================================================================== */
 #staff {
   background-color: #052232;
   width: 100%;
-  
-  /* ▼ 画面高さ指定（100vh / 100dvh）を解除し、固定の上下左右余白にします ▼ */
-  padding: 80px 20px 40px 20px; /* 上: 80px, 左右: 20px, 下: 40px */
+  padding: 80px 20px 40px 20px;
   margin: 0;
-  
-  display: block; /* 画面全体の伸縮による影響を防ぐためシンプルなブロック配置に変更 */
+  display: block;
   box-sizing: border-box;
 }
 
-/* 画像を表示するコンテナの設定 */
 .staff-image-container {
-  max-width: 500px; /* PCなど大きな画面で広がりすぎないための制限幅 */
+  max-width: 500px;
   width: 100%;
-  margin: 0 auto;   /* 左右中央寄せ */
+  margin: 0 auto;
 }
 
-/* 画像自体のサイズ・見た目の調整 */
 .staff-info-img {
   width: 100%;
-  height: auto;     /* 縦横比を保ったまま綺麗に拡大縮小 */
+  height: auto;
   display: block;
   border-radius: 0;
   box-shadow: none;
 }
 
 /* ==========================================================================
-   9. フッター & SNSアイコン
+   フッター
    ========================================================================== */
 footer {
   background-color: #090d16;
@@ -608,7 +567,7 @@ footer {
 }
 
 /* ==========================================================================
-   10. アニメーション演出
+   アニメーション演出
    ========================================================================== */
 .fade-in {
   opacity: 0;
@@ -622,7 +581,7 @@ footer {
 }
 
 /* ==========================================================================
-   11. レスポンシブ対応（スマホ表示調整）
+   レスポンシブ対応（スマホ表示調整）
    ========================================================================== */
 @media (max-width: 768px) {
   header {
@@ -715,11 +674,6 @@ footer {
     outline: none;
   }
 
-  #nav-menu ul li a:active,
-  #nav-menu ul li a:focus {
-    color: var(--accent);
-  }
-
   #hero {
     width: 100% !important;
     aspect-ratio: 3036 / 4725 !important;
@@ -738,64 +692,38 @@ footer {
   .hero-title {
     font-size: clamp(20px, 5vw, 36px);
   }
-}
 
-@media (min-width: 769px) {
-  #hamburger-btn {
-    display: none;
-  }
-}
-
-/* PC表示の時：横並びにする設定*/
-.trailer-slider-wrapper {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.trailer-slider-wrapper .video-container {
-  flex: 1;
-  width: 100%;
-  margin: 0;
-}
-
-/*スマホ表示の時：1枚ずつ綺麗に画面に収まるスライダーにする設定*/
-@media (max-width: 768px) {
   .trailer-slider-wrapper {
     display: flex;
+    justify-content: flex-start; /* 🌟この1行を追加して中央揃えをリセットします */
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    gap: 0;                    /* 動画同士の隙間をなくすことで見切れを防ぎます */
-    padding: 0;                /* 余計な左右の余白をなくします */
+    gap: 0;
+    padding: 0;
     width: 100%;
     box-sizing: border-box;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
 
-  /* Chromeなどのスクロールバーを非表示にする */
   .trailer-slider-wrapper::-webkit-scrollbar {
     display: none;
   }
 
   .trailer-slider-wrapper .video-container {
-    flex: 0 0 100%;            /* スマホの画面幅に対して必ず100%（1枚分）にする */
+    flex: 0 0 100%;
     width: 100%;
     max-width: 100%;
-    padding-bottom: 56.25%;    /* 16:9の比率をキープ */
+    padding-bottom: 56.25%;
     height: 0;
     margin: 0;
-    scroll-snap-align: center; /* スワイプしたときに真ん中にピタッと止まる */
+    scroll-snap-align: center;
     opacity: 1 !important;
     visibility: visible !important;
-    border-radius: 0;          /* スマホ画面いっぱいに合わせるため角丸をなくす（お好みで12pxに戻してもOKです） */
+    border-radius: 0;
     box-sizing: border-box;
   }
-}
 
-  /* ▼ 動画の下に配置する「ドット（インジケーター）」のデザイン ▼ */
   .trailer-dots {
     display: flex;
     justify-content: center;
@@ -806,20 +734,23 @@ footer {
   .trailer-dot {
     width: 10px;
     height: 10px;
-    background-color: rgba(255, 255, 255, 0.3); /* 通常時の色（薄い白） */
+    background-color: rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
   }
 
-  /* 今映っている動画に対応するドットの色（アクセントカラーのオレンジ） */
   .trailer-dot.active {
     background-color: var(--accent);
-    transform: scale(1.2); /* 少しだけ大きくして分かりやすくする */
+    transform: scale(1.2);
+  }
+}
+
+@media (min-width: 769px) {
+  #hamburger-btn {
+    display: none;
   }
 
-/* PC表示の時はドットを非表示にする */
-@media (min-width: 769px) {
   .trailer-dots {
     display: none;
   }
