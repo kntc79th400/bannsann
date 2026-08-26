@@ -158,7 +158,7 @@ header nav ul li a:focus {
    ========================================================================== */
 #hero {
   width: 100%;
-  aspect-ratio: 1285 / 2000;
+  aspect-ratio: 729 / 1134;
   position: relative;
   overflow: hidden;
   background: url('poster.jpg') center / cover no-repeat;
@@ -745,7 +745,7 @@ footer {
 
   #hero {
     width: 100% !important;
-    aspect-ratio: 1285 / 2000 !important;
+    aspect-ratio: 729 / 1134 !important;
     height: auto !important;
     margin-top: 0 !important;
     padding: 0 !important;
