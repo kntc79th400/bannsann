@@ -10,7 +10,7 @@ window.addEventListener('load', function() {
         loading.classList.add('loaded');
         document.body.style.overflow = 'auto';
         document.body.classList.add('is-loaded');
-    }, 0);
+    }, 3500);
 });
 
 // ==========================================================================
