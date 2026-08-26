@@ -89,7 +89,7 @@ h2 {
 }
 
 /* ==========================================================================
-   4. 固定ヘッダー
+   4. 固定ヘッダー（左寄せ版）
    ========================================================================== */
 header {
   position: fixed;
@@ -101,9 +101,9 @@ header {
   backdrop-filter: blur(4px);
   color: var(--text-light);
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 50px; /* 画面左端からの余白 */
   box-sizing: border-box;
   z-index: 100;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -114,26 +114,23 @@ header.header-hidden {
   transform: translateY(-100%);
 }
 
-header .logo {
-  font-weight: bold;
-  font-size: 1.2rem;
-  letter-spacing: 1px;
+header nav {
+  width: auto;
 }
 
-.logo a {
-  color: inherit;
-  text-decoration: none;
-}
-
+/* TOPから順番に左詰めで並べる */
 header nav ul {
   list-style: none;
   display: flex;
+  justify-content: flex-end;
+  gap: 28px; /* 各メニュー間の余白 */
+  align-items: center;
   margin: 0;
   padding: 0;
 }
 
 header nav ul li {
-  margin-left: 20px;
+  margin-left: 0;
 }
 
 header nav ul li a {
