@@ -105,7 +105,7 @@ navLinks.forEach(link => {
 });
 
 // ==========================================================================
-// 6. トレーラーセクションの自動スクロール（全端末対応版）
+// 6. トレーラーセクションの自動スクロール（トラックパッド手動スクロール検知強化版）
 // ==========================================================================
 document.addEventListener("DOMContentLoaded", () => {
   const slider = document.getElementById("trailer-slider");
@@ -118,6 +118,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let autoScrollTimer = null;
   let resumeTimer = null;
   let isVideoPlaying = false;
+  let isProgrammaticScroll = false; // 自動スクロール中かどうかを識別するフラグ
+  let scrollEndTimer = null;
 
   const AUTO_SCROLL_INTERVAL = 6500;
   const VIDEO_RESUME_DELAY = 5000;
@@ -126,10 +128,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const scrollToSlide = (index) => {
     const targetSlide = slides[index];
     if (targetSlide) {
+      isProgrammaticScroll = true; // 自動スクロール開始
       slider.scrollTo({
         left: targetSlide.offsetLeft - slider.offsetLeft,
         behavior: "smooth"
       });
+
+      // アニメーション完了後にフラグを解除（smoothスクロールの完了待ち）
+      if (scrollEndTimer) clearTimeout(scrollEndTimer);
+      scrollEndTimer = setTimeout(() => {
+        isProgrammaticScroll = false;
+      }, 600);
     }
   };
 
@@ -142,7 +151,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (autoScrollTimer) clearInterval(autoScrollTimer);
 
     autoScrollTimer = setInterval(() => {
-      // 画面幅に関わらず、動画再生中でなく画面内に表示中であればスクロール
       if (!isVideoPlaying && isSliderInViewport()) {
         currentIndex = (currentIndex + 1) % slides.length;
         scrollToSlide(currentIndex);
@@ -171,6 +179,11 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   slider.addEventListener("scroll", () => {
+    // ユーザーによる手動スクロール（トラックパッドの2本指スワイプ含む）時のみ一時停止を起動
+    if (!isProgrammaticScroll) {
+      scheduleResume(USER_RESUME_DELAY);
+    }
+
     const sliderRect = slider.getBoundingClientRect();
     let closestIndex = 0;
     let minDistance = Infinity;
