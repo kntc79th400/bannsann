@@ -107,25 +107,58 @@ navLinks.forEach(link => {
     });
 });
 
+// ==========================================================================
+// トレーラーセクションの横スワイプとドットの連動機能
+// ==========================================================================
 document.addEventListener("DOMContentLoaded", () => {
+  const slider = document.getElementById("trailer-slider");
+  const dots = document.querySelectorAll(".trailer-dot");
   const slides = document.querySelectorAll(".trailer-slide");
-  if (slides.length <= 1) return; // 動画が1つ以下の場合は何もしない
 
-  let currentIndex = 0;
-  const intervalTime = 4000; // 切り替わる時間（4000ミリ秒 = 4秒）
+  if (!slider || dots.length === 0 || slides.length === 0) return;
 
-  function switchSlide() {
-    // スマホサイズ（768px以下）のときだけスライドを動かす
-    if (window.innerWidth <= 768) {
-      slides[currentIndex].classList.remove("active-slide");
-      currentIndex = (currentIndex + 1) % slides.length;
-      slides[currentIndex].classList.add("active-slide");
-    }
-  }
+  // 1. スクロール（スワイプ）したときに、どの動画が真ん中にあるか判断してドットを光らせる
+  slider.addEventListener("scroll", () => {
+    if (window.innerWidth > 768) return; // スマホサイズのみ実行
 
-  // 初期化：最初のスライドに active-slide を付与
-  slides[0].classList.add("active-slide");
+    const sliderRect = slider.getBoundingClientRect();
+    let closestIndex = 0;
+    let minDistance = Infinity;
 
-  // 定期的に切り替えるタイマーを開始
-  setInterval(switchSlide, intervalTime);
+    slides.forEach((slide, index) => {
+      const slideRect = slide.getBoundingClientRect();
+      // スライダーの中央からの距離を計算
+      const distance = Math.abs((slideRect.left + slideRect.width / 2) - (sliderRect.left + sliderRect.width / 2));
+      
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestIndex = index;
+      }
+    });
+
+    // ドットのactiveクラスを切り替える
+    dots.forEach((dot, index) => {
+      if (index === closestIndex) {
+        dot.classList.add("active");
+      } else {
+        dot.classList.remove("active");
+      }
+    });
+  });
+
+  // 2. ドットをクリック（タップ）したときに、対応する動画の位置へスムーズにスクロールさせる
+  dots.forEach((dot) => {
+    dot.addEventListener("click", () => {
+      const index = parseInt(dot.getAttribute("data-index"));
+      const targetSlide = slides[index];
+
+      if (targetSlide) {
+        targetSlide.scrollIntoView({
+          behavior: "smooth",
+          inline: "center",
+          block: "nearest"
+        });
+      }
+    });
+  });
 });

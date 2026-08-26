@@ -761,29 +761,66 @@ footer {
   margin: 0;
 }
 
-/*スマホ表示の時：スライダー形式にする設定*/
+/*スマホ表示の時：1枚ずつ綺麗に画面に収まるスライダーにする設定*/
 @media (max-width: 768px) {
   .trailer-slider-wrapper {
-    position: relative;
-    display: block;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 0;                    /* 動画同士の隙間をなくすことで見切れを防ぎます */
+    padding: 0;                /* 余計な左右の余白をなくします */
     width: 100%;
-    overflow: hidden;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  /* Chromeなどのスクロールバーを非表示にする */
+  .trailer-slider-wrapper::-webkit-scrollbar {
+    display: none;
   }
 
   .trailer-slider-wrapper .video-container {
-    position: absolute;
-    top: 0;
-    left: 0;
+    flex: 0 0 100%;            /* スマホの画面幅に対して必ず100%（1枚分）にする */
     width: 100%;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.8s ease-in-out; /* ふんわり切り替わるアニメーション */
+    max-width: 100%;
+    padding-bottom: 56.25%;    /* 16:9の比率をキープ */
+    height: 0;
+    margin: 0;
+    scroll-snap-align: center; /* スワイプしたときに真ん中にピタッと止まる */
+    opacity: 1 !important;
+    visibility: visible !important;
+    border-radius: 0;          /* スマホ画面いっぱいに合わせるため角丸をなくす（お好みで12pxに戻してもOKです） */
+    box-sizing: border-box;
+  }
+}
+
+  /* ▼ 動画の下に配置する「ドット（インジケーター）」のデザイン ▼ */
+  .trailer-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
   }
 
-  /* 画面に表示するスライドのクラス */
-  .trailer-slider-wrapper .video-container.active-slide {
-    position: relative; /* 最初の1枚目の高さを確保する */
-    opacity: 1;
-    visibility: visible;
+  .trailer-dot {
+    width: 10px;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.3); /* 通常時の色（薄い白） */
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+
+  /* 今映っている動画に対応するドットの色（アクセントカラーのオレンジ） */
+  .trailer-dot.active {
+    background-color: var(--accent);
+    transform: scale(1.2); /* 少しだけ大きくして分かりやすくする */
+  }
+
+/* PC表示の時はドットを非表示にする */
+@media (min-width: 769px) {
+  .trailer-dots {
+    display: none;
   }
 }
