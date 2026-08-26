@@ -105,7 +105,7 @@ navLinks.forEach(link => {
 });
 
 // ==========================================================================
-// 6. トレーラーセクションの自動スクロール（動画状態連動版）
+// 6. トレーラーセクションの自動スクロール（動画再生検知強化版）
 // ==========================================================================
 document.addEventListener("DOMContentLoaded", () => {
   const slider = document.getElementById("trailer-slider");
@@ -117,37 +117,38 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentIndex = 0;
   let autoScrollTimer = null;
   let resumeTimer = null;
-  let isVideoPlaying = false; // 動画が再生中かどうかのフラグ
+  let isVideoPlaying = false;
 
-  const AUTO_SCROLL_INTERVAL = 5000; // 通常時の自動切り替え間隔（5秒）
-  const VIDEO_RESUME_DELAY = 5000;   // 動画が停止・終了してからスクロール再開までの時間（5秒）
-  const USER_RESUME_DELAY = 8000;    // 手動スワイプ・ドット操作後にスクロール再開までの時間（8秒）
+  const AUTO_SCROLL_INTERVAL = 5000;
+  const VIDEO_RESUME_DELAY = 5000;
+  const USER_RESUME_DELAY = 8000;
 
-  // スライド移動処理
   const scrollToSlide = (index) => {
     const targetSlide = slides[index];
     if (targetSlide) {
-      targetSlide.scrollIntoView({
-        behavior: "smooth",
-        inline: "center",
-        block: "nearest"
+      slider.scrollTo({
+        left: targetSlide.offsetLeft - slider.offsetLeft,
+        behavior: "smooth"
       });
     }
   };
 
-  // 自動スクロール開始
+  const isSliderInViewport = () => {
+    const rect = slider.getBoundingClientRect();
+    return rect.top < window.innerHeight && rect.bottom > 0;
+  };
+
   const startAutoScroll = () => {
     if (autoScrollTimer) clearInterval(autoScrollTimer);
 
     autoScrollTimer = setInterval(() => {
-      if (window.innerWidth <= 768 && !isVideoPlaying) {
+      if (window.innerWidth <= 768 && !isVideoPlaying && isSliderInViewport()) {
         currentIndex = (currentIndex + 1) % slides.length;
         scrollToSlide(currentIndex);
       }
     }, AUTO_SCROLL_INTERVAL);
   };
 
-  // 完全停止処理
   const stopAutoScroll = () => {
     if (autoScrollTimer) {
       clearInterval(autoScrollTimer);
@@ -159,7 +160,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // 指定した時間（delayMs）の後に自動スクロールを再開する予約処理
   const scheduleResume = (delayMs) => {
     stopAutoScroll();
     if (!isVideoPlaying) {
@@ -169,7 +169,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // スクロール位置に合わせてドットの表示を更新
   slider.addEventListener("scroll", () => {
     if (window.innerWidth > 768) return;
 
@@ -198,7 +197,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // ドットタップ時
   dots.forEach((dot) => {
     dot.addEventListener("click", () => {
       const index = parseInt(dot.getAttribute("data-index"));
@@ -207,7 +205,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 手動スワイプ・タッチ操作時
   const userEvents = ["touchstart", "mousedown", "pointerdown", "wheel"];
   userEvents.forEach((eventType) => {
     slider.addEventListener(eventType, () => {
@@ -215,25 +212,28 @@ document.addEventListener("DOMContentLoaded", () => {
     }, { passive: true });
   });
 
-  // --------------------------------------------------------------------------
-  // YouTube IFrame Player API の読み込みと再生イベント監視
-  // --------------------------------------------------------------------------
+  // 動画枠（iframe）をタップした瞬間に即座に自動スクロールを停止する安全装置
+  window.addEventListener("blur", () => {
+    if (document.activeElement && document.activeElement.tagName === "IFRAME") {
+      isVideoPlaying = true;
+      stopAutoScroll();
+    }
+  });
+
+  // YouTube IFrame APIの読み込みと再生イベント監視
   const iframes = slider.querySelectorAll("iframe");
 
   if (iframes.length > 0) {
-    // YouTube APIのスクリプトタグを自動挿入
     const tag = document.createElement("script");
     tag.src = "https://www.youtube.com/iframe_api";
     const firstScriptTag = document.getElementsByTagName("script")[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-    // APIの準備が完了したときに実行される処理
     window.onYouTubeIframeAPIReady = () => {
       iframes.forEach((iframe) => {
         new YT.Player(iframe, {
           events: {
             onStateChange: (event) => {
-              // event.data: 1 = 再生中, 2 = 一時停止, 0 = 再生終了
               if (event.data === YT.PlayerState.PLAYING) {
                 isVideoPlaying = true;
                 stopAutoScroll();
@@ -251,6 +251,5 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  // 初期読み込み時の自動スクロール開始
   startAutoScroll();
 });
