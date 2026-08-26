@@ -105,7 +105,7 @@ navLinks.forEach(link => {
 });
 
 // ==========================================================================
-// 6. トレーラーセクションの自動スクロール（標準スムーズスクロール版）
+// 6. トレーラーセクションの自動スクロール（動画状態連動版）
 // ==========================================================================
 document.addEventListener("DOMContentLoaded", () => {
   const slider = document.getElementById("trailer-slider");
@@ -117,12 +117,13 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentIndex = 0;
   let autoScrollTimer = null;
   let resumeTimer = null;
-  let isVideoPlaying = false; // 動画再生状態の管理フラグ
+  let isVideoPlaying = false; // 動画が再生中かどうかのフラグ
 
-  const AUTO_SCROLL_INTERVAL = 5000; // 自動で切り替わる間隔（5秒）
-  const RESUME_DELAY = 8000;         // 手動操作後、自動スクロールが再開するまでの時間（8秒）
+  const AUTO_SCROLL_INTERVAL = 5000; // 通常時の自動切り替え間隔（5秒）
+  const VIDEO_RESUME_DELAY = 5000;   // 動画が停止・終了してからスクロール再開までの時間（5秒）
+  const USER_RESUME_DELAY = 8000;    // 手動スワイプ・ドット操作後にスクロール再開までの時間（8秒）
 
-  // ブラウザ標準のスムーズスクロールで移動する関数
+  // スライド移動処理
   const scrollToSlide = (index) => {
     const targetSlide = slides[index];
     if (targetSlide) {
@@ -134,7 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // 自動スクロールを開始する関数
+  // 自動スクロール開始
   const startAutoScroll = () => {
     if (autoScrollTimer) clearInterval(autoScrollTimer);
 
@@ -146,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, AUTO_SCROLL_INTERVAL);
   };
 
-  // タイマーを完全停止する関数
+  // 完全停止処理
   const stopAutoScroll = () => {
     if (autoScrollTimer) {
       clearInterval(autoScrollTimer);
@@ -158,14 +159,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // 一時停止して指定時間後に自動スクロールを再開する関数
-  const pauseAndResetTimer = () => {
+  // 指定した時間（delayMs）の後に自動スクロールを再開する予約処理
+  const scheduleResume = (delayMs) => {
     stopAutoScroll();
-
     if (!isVideoPlaying) {
       resumeTimer = setTimeout(() => {
         startAutoScroll();
-      }, RESUME_DELAY);
+      }, delayMs);
     }
   };
 
@@ -198,33 +198,59 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // ドットタップ時（一定時間後に再開）
+  // ドットタップ時
   dots.forEach((dot) => {
     dot.addEventListener("click", () => {
-      isVideoPlaying = false;
       const index = parseInt(dot.getAttribute("data-index"));
       scrollToSlide(index);
-      pauseAndResetTimer();
+      scheduleResume(USER_RESUME_DELAY);
     });
   });
 
-  // 画面操作・スワイプ時（一定時間後に再開）
+  // 手動スワイプ・タッチ操作時
   const userEvents = ["touchstart", "mousedown", "pointerdown", "wheel"];
   userEvents.forEach((eventType) => {
     slider.addEventListener(eventType, () => {
-      isVideoPlaying = false;
-      pauseAndResetTimer();
+      scheduleResume(USER_RESUME_DELAY);
     }, { passive: true });
   });
 
-  // YouTube動画（iframe）タップ時は自動スクロールを停止
-  window.addEventListener("blur", () => {
-    if (document.activeElement && document.activeElement.tagName === "IFRAME") {
-      isVideoPlaying = true;
-      stopAutoScroll();
-    }
-  });
+  // --------------------------------------------------------------------------
+  // YouTube IFrame Player API の読み込みと再生イベント監視
+  // --------------------------------------------------------------------------
+  const iframes = slider.querySelectorAll("iframe");
 
-  // ページ読み込み時に自動スクロールを開始
+  if (iframes.length > 0) {
+    // YouTube APIのスクリプトタグを自動挿入
+    const tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    const firstScriptTag = document.getElementsByTagName("script")[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    // APIの準備が完了したときに実行される処理
+    window.onYouTubeIframeAPIReady = () => {
+      iframes.forEach((iframe) => {
+        new YT.Player(iframe, {
+          events: {
+            onStateChange: (event) => {
+              // event.data: 1 = 再生中, 2 = 一時停止, 0 = 再生終了
+              if (event.data === YT.PlayerState.PLAYING) {
+                isVideoPlaying = true;
+                stopAutoScroll();
+              } else if (
+                event.data === YT.PlayerState.PAUSED ||
+                event.data === YT.PlayerState.ENDED
+              ) {
+                isVideoPlaying = false;
+                scheduleResume(VIDEO_RESUME_DELAY);
+              }
+            }
+          }
+        });
+      });
+    };
+  }
+
+  // 初期読み込み時の自動スクロール開始
   startAutoScroll();
 });
