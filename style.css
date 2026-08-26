@@ -225,7 +225,7 @@ body.is-loaded .hero-title {
 }
 
 /* ==========================================================================
-   TRAILER セクション
+   TRAILER セクション（PC・スマホ共通スライダー）
    ========================================================================== */
 #trailer {
   background-color: var(--bg-dark-main);
@@ -241,26 +241,40 @@ body.is-loaded .hero-title {
   text-align: center;
 }
 
+/* スライダー本体 */
 .trailer-slider-wrapper {
   display: flex;
-  justify-content: center;
-  gap: 30px;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.trailer-slider-wrapper .video-container {
-  position: relative;
-  flex: 1;
+  justify-content: flex-start;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 0;
+  padding: 0;
   width: 100%;
   max-width: 800px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.trailer-slider-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+/* 各スライド（動画枠） */
+.trailer-slider-wrapper .video-container {
+  flex: 0 0 100%;
+  width: 100%;
+  max-width: 100%;
   padding-bottom: 56.25%;
   height: 0;
+  margin: 0;
+  scroll-snap-align: center;
+  position: relative;
   overflow: hidden;
   background: var(--bg-dark-card);
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  margin: 0;
   box-sizing: border-box;
 }
 
@@ -272,6 +286,28 @@ body.is-loaded .hero-title {
   height: 100%;
   display: block;
   border: 0;
+}
+
+/* ドットインジケーター */
+.trailer-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.trailer-dot {
+  width: 10px;
+  height: 10px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.trailer-dot.active {
+  background-color: var(--accent);
+  transform: scale(1.2);
 }
 
 /* ==========================================================================
@@ -748,10 +784,6 @@ footer {
 
 @media (min-width: 769px) {
   #hamburger-btn {
-    display: none;
-  }
-
-  .trailer-dots {
     display: none;
   }
 }

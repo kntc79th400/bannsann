@@ -105,7 +105,7 @@ navLinks.forEach(link => {
 });
 
 // ==========================================================================
-// 6. トレーラーセクションの自動スクロール（動画再生検知強化版）
+// 6. トレーラーセクションの自動スクロール（全端末対応版）
 // ==========================================================================
 document.addEventListener("DOMContentLoaded", () => {
   const slider = document.getElementById("trailer-slider");
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let resumeTimer = null;
   let isVideoPlaying = false;
 
-  const AUTO_SCROLL_INTERVAL = 5000;
+  const AUTO_SCROLL_INTERVAL = 6500;
   const VIDEO_RESUME_DELAY = 5000;
   const USER_RESUME_DELAY = 8000;
 
@@ -142,7 +142,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (autoScrollTimer) clearInterval(autoScrollTimer);
 
     autoScrollTimer = setInterval(() => {
-      if (window.innerWidth <= 768 && !isVideoPlaying && isSliderInViewport()) {
+      // 画面幅に関わらず、動画再生中でなく画面内に表示中であればスクロール
+      if (!isVideoPlaying && isSliderInViewport()) {
         currentIndex = (currentIndex + 1) % slides.length;
         scrollToSlide(currentIndex);
       }
@@ -170,8 +171,6 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   slider.addEventListener("scroll", () => {
-    if (window.innerWidth > 768) return;
-
     const sliderRect = slider.getBoundingClientRect();
     let closestIndex = 0;
     let minDistance = Infinity;
@@ -212,7 +211,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }, { passive: true });
   });
 
-  // 動画枠（iframe）をタップした瞬間に即座に自動スクロールを停止する安全装置
   window.addEventListener("blur", () => {
     if (document.activeElement && document.activeElement.tagName === "IFRAME") {
       isVideoPlaying = true;
@@ -220,7 +218,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // YouTube IFrame APIの読み込みと再生イベント監視
   const iframes = slider.querySelectorAll("iframe");
 
   if (iframes.length > 0) {
